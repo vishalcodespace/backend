@@ -1,8 +1,11 @@
 const mongoose = require("mongoose");
+require("dotenv").config();
 
 const connectDB = async () => {
   try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/taskDB");
+    // Use environment variable for MongoDB connection
+    const mongoURI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/taskDB";
+    await mongoose.connect(mongoURI);
     console.log("MongoDB Connected Successfully");
     return true;
   } catch (error) {

@@ -1,23 +1,29 @@
 const express = require("express");
+const dotenv = require("dotenv");
 const connectDB = require("./db");
+
+// Load environment variables FIRST
+dotenv.config();
 
 // Import routes
 const authRoutes = require("./routes/authRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const userRoutes = require("./routes/userRoutes");
-const faqRoutes = require("./routes/faqRoutes"); // New FAQ routes
+const faqRoutes = require("./routes/faqRoutes");
+const blogRoutes = require("./routes/blogRoutes");
 
 const app = express();
 
 // Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/user", userRoutes);
-app.use("/api", faqRoutes); // FAQ routes added here
+app.use("/api", faqRoutes);
+app.use("/api", blogRoutes);
 
 // Root route
 app.get("/", (req, res) => {
@@ -27,7 +33,14 @@ app.get("/", (req, res) => {
       auth: "/api/auth",
       admin: "/api/admin",
       user: "/api/user",
-      faq: "/api/faqs"
+      faq: "/api/faqs",
+      blog: {
+        create: "POST /api/blogs",
+        getAll: "GET /api/blogs",
+        getOne: "GET /api/blogs/:id",
+        update: "PUT /api/blogs/:id",
+        delete: "DELETE /api/blogs/:id"
+      }
     }
   });
 });
